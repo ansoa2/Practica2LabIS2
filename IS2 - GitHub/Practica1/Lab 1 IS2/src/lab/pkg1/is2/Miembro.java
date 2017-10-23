@@ -28,7 +28,14 @@ public class Miembro {
         this.importe_motos = 0;
         this.n_motos = 0;
     }
-
+    public void actualizarImporte()
+    {
+        importe_motos = 0;
+        for(int i = 0; i < n_motos; i++)
+        {
+            importe_motos += motocicletas.get(i).getPrecio();
+        }
+    }
     public int getN_socio() {
         return n_socio;
     }
@@ -93,7 +100,7 @@ public class Miembro {
         
         for (int i = 0; i < motocicletas.size(); i++) {
             motocicletas = contadorMotocicletas(motocicletas);
-            miembro = miembro + motocicletas.get(i).toStringMiembro();
+            miembro = miembro + motocicletas.get(i).toStringMiembro() + "\n";
         }
         return miembro;
     }

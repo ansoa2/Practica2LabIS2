@@ -26,7 +26,7 @@ public class Cesion {
 
     public String toString() {
         String cesion;
-
+        
         cesion = "El socio: \n " + miembro1.toStringSinMotos()+ " \n \nHa cedido la moto: \n    " + motocicleta.toString() + "\n \nAl socio: \n   " + miembro2.toStringSinMotos() + "\n \nEn la fecha: \n   "+ fecha.toString() + "\n";
         return cesion;
     }

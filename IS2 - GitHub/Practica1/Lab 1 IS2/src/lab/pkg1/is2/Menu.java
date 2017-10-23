@@ -5,8 +5,6 @@
  */
 package lab.pkg1.is2;
 
-import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -25,7 +23,7 @@ public class Menu {
     private static final int sig_id_socio = 1;
     private static final int sig_id_moto = 1;
     private static final int incremento_num_motos = 1;
-    private static final int maxcompra = 6000;
+    private int maxcompra;
     private int cantidad_socios = 0;
     private int cantidad_motos = 0;
     private ArrayList<Miembro> miembros;
@@ -33,15 +31,21 @@ public class Menu {
     private ArrayList<Cesion> cesiones;
 
     public Menu() throws IOException {
-        this.miembros = new ArrayList<Miembro>();
-        this.motocicletas = new ArrayList<Motocicleta>();
-        this.cesiones = new ArrayList<Cesion>();
-        objetosPrueba();
-        int menu;
+        this.miembros = new ArrayList<>();
+        this.motocicletas = new ArrayList<>();
+        this.cesiones = new ArrayList<>();
+        
+        int menu, max_compra;
         String nombre;
 
+        System.out.println("Introduce importe máximo de compra de cada miembro: ");
+        max_compra = leerInt();
+        this.maxcompra = max_compra;
+        
+        objetosPrueba();
+        
         do {
-            System.out.println("MENU: \n1. Registrar un nuevo miembro");
+            System.out.println("\nMENU: \n1. Registrar un nuevo miembro");
             System.out.println("2. Registrar una nueva motocicleta");
             System.out.println("3. Registrar una cesión");
             System.out.println("4. Listar en pantalla los miembros con motos en posesión");
@@ -160,11 +164,17 @@ public class Menu {
 
     public int leerInt() {
         int x = 0;
-        try {
-            Scanner sc = new Scanner(System.in);
-            x = sc.nextInt();
-        } catch (Exception e) {
-        }
+        boolean valido = false;
+        do {
+            try {
+                Scanner sc = new Scanner(System.in);
+                x = sc.nextInt();
+                valido = true;
+            } catch (Exception e) {
+                System.out.println("Se espera un numero entero ");
+            }
+        } while (valido == false);
+
         return x;
     }
 
@@ -250,10 +260,9 @@ public class Menu {
             miembros.get(miembro_1).getMotocicletas().remove(motocicleta_1);
 
             miembro2 = miembros.get(miembro_2);
-            miembros.get(miembro_2).getMotocicletas().add(motocicleta);
+            miembros.get(miembro_2).addMotocicletas(motocicleta);
             miembros.get(miembro_2).setN_motos(miembros.get(miembro_2).getN_motos() + incremento_num_motos);
-            miembros.get(miembro_2).setImporte_motos(miembros.get(miembro_2).getImporte_motos() + miembros.get(miembro_2).getMotocicletas().get(motocicleta_1).getPrecio());
-            miembros.get(miembro_2).getMotocicletas().add(motocicleta);
+            miembros.get(miembro_2).actualizarImporte();
             fecha = new Date();
             cesion = new Cesion(miembro1, miembro2, motocicleta, fecha);
             cesiones.add(cesion);
@@ -261,11 +270,7 @@ public class Menu {
     }
 
     public int buscarMiembro() {
-
-        String nombre, matricula;
         String nombre_miembro;
-        int cilindrada;
-        int menu, menu1;
         int i = 0;
 
         boolean encontrado = false, miembro_encontrado = false;
@@ -327,8 +332,7 @@ public class Menu {
     }
 
     public Motocicleta solicitarMotocicleta() {
-        String nombre, matricula;
-        boolean nombre_valido = false;
+        String matricula;
         int cilindrada;
         int i = 0;
         Motocicleta motocicleta = new Motocicleta();
@@ -357,7 +361,7 @@ public class Menu {
         Motocicleta motocicleta_aux;
         boolean motocicleta_encontrada = false;
         int i = 0;
-        String nom1 = "", nom2 = "";
+
         do {
             i = 0;
             motocicleta_aux = solicitarMotocicleta();
@@ -382,6 +386,7 @@ public class Menu {
     public void mostrarCesiones() {
 
         if (cesiones.size() > 0) {
+            System.out.println("Cesiones : \n");
             for (int i = 0; i < cesiones.size(); i++) {
                 System.out.println("" + cesiones.get(i).toString());
             }
@@ -399,7 +404,7 @@ public class Menu {
 
     public boolean compruebaMatricula(String matricula) {
         boolean valido = false;
-        String numeros = "", letras = "", letra;
+        String numeros = "", letras = "";
         int numero;
 
         if (matricula.length() == 7) {
@@ -441,11 +446,13 @@ public class Menu {
 
             motocicleta = new Motocicleta(sig_id_moto + i, matricula[i], nombres_moto[i], cilindrada[i], precio[i]);
             miembro = new Miembro(sig_id_socio + i, nombres[i]);
-            miembro.addMotocicletas(motocicleta);
-            miembro.setN_motos(incremento_num_motos);
-            miembro.setImporte_motos(motocicleta.getPrecio());
             miembros.add(miembro);
-            motocicletas.add(motocicleta);
+            if (motocicleta.getPrecio() <= maxcompra) {
+                miembro.addMotocicletas(motocicleta);
+                miembro.setN_motos(incremento_num_motos);
+                miembro.setImporte_motos(motocicleta.getPrecio());
+                motocicletas.add(motocicleta);
+            }
         }
     }
 
@@ -457,7 +464,7 @@ public class Menu {
             pw = new PrintWriter(fichero);
             String s;
             s = "Miembros: \n";
-            
+
             if (miembros.size() > 0) {
                 for (int i = 0; i < miembros.size(); i++) {
                     if (miembros.get(i).getN_motos() > 0) {
@@ -465,9 +472,11 @@ public class Menu {
                     }
                 }
             }
+
+            s += "\nCesiones: \n";
             if (cesiones.size() > 0) {
                 for (int i = 0; i < cesiones.size(); i++) {
-                    s += cesiones.get(i).toString()+ "\n";
+                    s += cesiones.get(i).toString() + "\n";
                 }
             }
 
@@ -487,5 +496,4 @@ public class Menu {
             }
         }
     }
-
 }

@@ -5,6 +5,7 @@
  */
 package lab.pkg1.is2;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -15,7 +16,7 @@ import java.util.Scanner;
  */
 public class Lab1IS2 {
     
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         // TODO code application logic here
         Menu menu = new Menu();
     }

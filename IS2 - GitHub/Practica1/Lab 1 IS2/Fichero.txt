@@ -1,0 +1,56 @@
+Miembros: 
+Número del socio: 1
+Nombre: Angel
+Número de motos: 1
+Importe de compra: 2500
+Motocicletas en posesion: 
+    1 Vespa Primavera, de 125CC, coste de compra de 2500 y matricula 1111AAA
+
+Número del socio: 3
+Nombre: Pau
+Número de motos: 1
+Importe de compra: 2300
+Motocicletas en posesion: 
+    1 Motobenae Poney AG2, de 70CC, coste de compra de 2300 y matricula 1111AAC
+
+Número del socio: 4
+Nombre: Salva
+Número de motos: 1
+Importe de compra: 3800
+Motocicletas en posesion: 
+    1 Bultaco, de 200CC, coste de compra de 3800 y matricula 1111AAD
+
+Número del socio: 5
+Nombre: Eric
+Número de motos: 2
+Importe de compra: 3700
+Motocicletas en posesion: 
+    1 Guzzi Cardelino, de 75CC, coste de compra de 1200 y matricula 1111AAE
+    1 Vespa Primavera, de 125CC, coste de compra de 2500 y matricula 1111AAB
+
+Número del socio: 6
+Nombre: Ruben
+Número de motos: 1
+Importe de compra: 4000
+Motocicletas en posesion: 
+    1 Ducati mini, de 49CC, coste de compra de 4000 y matricula 1111AAF
+
+El socio: 
+ Número del socio: 2
+Nombre: Raul
+Número de motos: 0
+Importe de compra: 0 
+ 
+Ha cedido la moto: 
+        1 Vespa Primavera, de 125CC, coste de compra de 2500
+ 
+Al socio: 
+   Número del socio: 5
+Nombre: Eric
+Número de motos: 2
+Importe de compra: 3700
+ 
+En la fecha: 
+   Mon Oct 23 16:19:34 CEST 2017
+
+
