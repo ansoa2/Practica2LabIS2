@@ -34,7 +34,6 @@ public class Menu {
         this.cesiones = new ArrayList<>();
 
         int menu, max_compra;
-        String nombre;
 
         System.out.println("Introduce importe máximo de compra de cada miembro: ");
         max_compra = leerInt();
@@ -51,7 +50,8 @@ public class Menu {
             System.out.println("6. Mostrar las cesiones realizadas");
             System.out.println("7. Modificar otros gastos de moto");
             System.out.println("8. Eliminar miembro");
-            System.out.println("9. Salir del programa");
+            System.out.println("9. Mostrar miembros con mas motos");
+            System.out.println("10. Salir del programa");
 
             menu = leerInt();
 
@@ -81,16 +81,14 @@ public class Menu {
                     eliminarMiembro();
                     break;
                 case 9:
-                    System.out.println("Introduce el nombre del fichero: ");
-                    nombre = leerString();
-                    nombre = nombre + ".txt";
-                    guardarEnFichero(nombre);
-                    System.out.println("Saliendo del programa");
-                    System.exit(0);
+                    miembrosConMasMotos();
+                    break;
+                case 10:
+                    guardarEnFichero();
                     break;
             }
             limpiarConsola();
-        } while (menu != 9);
+        } while (menu != 10);
     }
 
     public void registrarMiembro() {
@@ -450,9 +448,14 @@ public class Menu {
         }
     }
 
-    private void guardarEnFichero(String nombre) throws IOException {
+    private void guardarEnFichero() throws IOException {
+        String nombre;
+        System.out.println("Introduce el nombre del fichero: ");
+        nombre = leerString();
+        nombre = nombre + ".txt";
         FileWriter fichero = new FileWriter(nombre);
         PrintWriter pw = null;
+
         try {
 
             pw = new PrintWriter(fichero);
@@ -489,7 +492,8 @@ public class Menu {
                 e2.printStackTrace();
             }
         }
-
+        System.out.println("Saliendo del programa");
+        System.exit(0);
     }
 
     public void modificarOtrosGastos() {
@@ -556,6 +560,36 @@ public class Menu {
                 Cesion(i, 0);
             } while (miembros.get(i).getMotocicletas().size() != 0);
             miembros.remove(i);
+        }
+    }
+
+    private void miembrosConMasMotos() {
+        ArrayList<Miembro> mas_motos = new ArrayList<>();
+        ArrayList<Miembro> mas_motos_aux = new ArrayList<>();
+        Miembro miembro_max;
+        
+
+        for (int i = 0; i < cesiones.size(); i++) {
+            mas_motos.add(cesiones.get(i).getMiembro2());
+        }
+        
+        miembro_max = mas_motos.get(0);
+        
+        for (int j = 1; j < mas_motos.size(); j++) {
+            if (miembro_max.getMotocicletas().size() < mas_motos.get(j).getMotocicletas().size()) {
+                miembro_max = mas_motos.get(j);
+            }
+        }
+        for (int k = 0; k < mas_motos.size(); k++) {
+            if (miembro_max.getMotocicletas().size() == mas_motos.get(k).getMotocicletas().size()) {
+                System.out.println("Añado miembro");
+                mas_motos_aux.add(mas_motos.get(k));
+            }
+        }
+
+        System.out.println("Miembros con mas motos: ");
+        for (int i = 0; i < mas_motos_aux.size(); i++) {
+            System.out.println(mas_motos_aux.get(i).toStringSinMotos() + "\n");
         }
     }
 }

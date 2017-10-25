@@ -24,6 +24,10 @@ public class Cesion {
         this.fecha = fecha;
     }
 
+    public Miembro getMiembro2() {
+        return miembro2;
+    }
+
     public String toString() {
         String cesion;
         
