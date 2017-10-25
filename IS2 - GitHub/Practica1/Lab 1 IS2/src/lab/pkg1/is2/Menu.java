@@ -50,7 +50,8 @@ public class Menu {
             System.out.println("5. Listar todas las motos");
             System.out.println("6. Mostrar las cesiones realizadas");
             System.out.println("7. Modificar otros gastos de moto");
-            System.out.println("8. Salir del programa");
+            System.out.println("8. Eliminar miembro");
+            System.out.println("9. Salir del programa");
 
             menu = leerInt();
 
@@ -62,7 +63,6 @@ public class Menu {
                     registrarMotocicleta();
                     break;
                 case 3:
-                    mostrarMiembros();
                     registrarCesion();
                     break;
                 case 4:
@@ -78,6 +78,9 @@ public class Menu {
                     modificarOtrosGastos();
                     break;
                 case 8:
+                    eliminarMiembro();
+                    break;
+                case 9:
                     System.out.println("Introduce el nombre del fichero: ");
                     nombre = leerString();
                     nombre = nombre + ".txt";
@@ -87,7 +90,7 @@ public class Menu {
                     break;
             }
             limpiarConsola();
-        } while (menu != 8);
+        } while (menu != 9);
     }
 
     public void registrarMiembro() {
@@ -186,32 +189,18 @@ public class Menu {
         System.out.println("Miembros: \n");
         if (miembros.size() > 0) {
             for (int i = 0; i < miembros.size(); i++) {
-                if (miembros.get(i).getN_motos() > 0) {
-                    System.out.println(miembros.get(i).toStringConMotos() + "\n");
-                }
-            }
-        } else {
-            System.out.println("No hay miembros registrados \n");
-        }
-
-    }
-
-    private void mostrarMiembros() {
-
-        System.out.println("Miembros: \n");
-        if (miembros.size() > 0) {
-            for (int i = 0; i < miembros.size(); i++) {
                 System.out.println(miembros.get(i).toStringConMotos() + "\n");
             }
         } else {
             System.out.println("No hay miembros registrados \n");
         }
+
     }
 
     private void mostrarMotos() {
-        
+
         ArrayList<Motocicleta> aux = new ArrayList<>();
-        
+
         for (int i = 0; i < miembros.size(); i++) {
             for (int j = 0; j < miembros.get(i).getMotocicletas().size(); j++) {
                 aux.add(miembros.get(i).getMotocicletas().get(j));
@@ -230,12 +219,9 @@ public class Menu {
     }
 
     private void registrarCesion() {
-        Cesion cesion;
-        Date fecha;
-        Miembro miembro1, miembro2;
-        Motocicleta motocicleta;
-        int miembro_1, miembro_2, motocicleta_1;
 
+        int miembro_1, motocicleta_1;
+        mostrarMiembrosConMoto();
         do {
             System.out.println("Miembro que cede la motocicleta: ");
             miembro_1 = buscarMiembro();
@@ -246,6 +232,16 @@ public class Menu {
 
         System.out.println("Motocicleta que quiere ceder: ");
         motocicleta_1 = buscarMotocicleta(miembros.get(miembro_1));
+
+        Cesion(miembro_1, motocicleta_1);
+    }
+
+    private void Cesion(int miembro_1, int motocicleta_1) {
+        Cesion cesion;
+        Date fecha;
+        int miembro_2;
+        Miembro miembro1, miembro2;
+        Motocicleta motocicleta;
 
         System.out.println("Miembro al que ceder la motocicleta: ");
         miembro_2 = buscarMiembroParaMotocicleta(miembros.get(miembro_1).getMotocicletas().get(motocicleta_1));
@@ -500,8 +496,8 @@ public class Menu {
         int i, j, miembro = 0, motocicleta = 0, otros_gastos = 0;
         boolean matricula_valida = false, nombre_encontrado = false, motocicleta_encontrada = false;
         String matricula;
-        mostrarMiembros();
 
+        mostrarMiembrosConMoto();
         do {
             System.out.println("Introduce la matricula: ");
             matricula = leerString();
@@ -533,5 +529,33 @@ public class Menu {
             }
         } while (otros_gastos < 0);
 
+    }
+
+    private void eliminarMiembro() {
+        int i, j;
+        String nombre_miembro;
+        boolean miembro_encontrado = false;
+
+        i = 0;
+        System.out.println("Nombre del miembro");
+        nombre_miembro = leerString();
+
+        do {
+
+            if (nombre_miembro.equals(miembros.get(i).getNombre())) {
+                miembro_encontrado = true;
+            } else {
+                i++;
+            }
+
+        } while (i < miembros.size() && miembro_encontrado == false);
+
+        if (miembro_encontrado == true) {
+            do {
+                System.out.println(miembros.get(i).getMotocicletas().get(0).toString());
+                Cesion(i, 0);
+            } while (miembros.get(i).getMotocicletas().size() != 0);
+            miembros.remove(i);
+        }
     }
 }

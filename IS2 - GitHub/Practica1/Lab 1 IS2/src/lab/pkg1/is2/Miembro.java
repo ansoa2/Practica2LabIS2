@@ -80,19 +80,6 @@ public class Miembro {
         this.motocicletas.add(motocicleta);
     }
 
-    public ArrayList<Motocicleta> contadorMotocicletas(ArrayList<Motocicleta> motocicletas) {
-        int siguiente = 0;
-        int contador = 0;
-        for (int i = 1; i < motocicletas.size(); i++) {
-            if (motocicletas.get(siguiente).getNombre().equals(motocicletas.get(i).getNombre())) {
-                motocicletas.remove(siguiente);
-                motocicletas.get(i).setCantidad(incremento_cantidad);
-            }
-            siguiente++;
-        }
-        return motocicletas;
-    }
-
     public String toStringConMotos() {
         String miembro;
         
@@ -100,7 +87,6 @@ public class Miembro {
                 + "\nNúmero de motos: " + getN_motos() + "\nImporte de compra: " + getImporte_motos()+ "\nMotocicletas en posesion: \n";
         
         for (int i = 0; i < motocicletas.size(); i++) {
-            motocicletas = contadorMotocicletas(motocicletas);
             miembro = miembro + motocicletas.get(i).toStringMiembro() + "\n";
         }
         return miembro;
