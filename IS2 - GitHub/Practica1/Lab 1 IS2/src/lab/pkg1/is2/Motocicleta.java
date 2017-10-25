@@ -17,12 +17,13 @@ public class Motocicleta {
     private int cilindrada;
     private int precio;
     private int cantidad;
+    private int otros_gastos;
 
 
     public Motocicleta()
     {}
             
-    public Motocicleta(int id_motocicleta,String matricula,String nombre,int cilindrada,int precio)
+    public Motocicleta(int id_motocicleta,String matricula,String nombre,int cilindrada,int precio, int otros_gastos)
     {
         this.cilindrada = cilindrada;
         this.id_motocicleta = id_motocicleta;
@@ -30,12 +31,16 @@ public class Motocicleta {
         this.precio = precio;
         this.nombre = nombre;
         this.cantidad = 1;
+        this.otros_gastos = otros_gastos;
     }
 
     public int getCantidad() {
         return cantidad;
     }
-
+    public void addOtrosGastos(int otros_gastos)
+    {
+        this.otros_gastos += otros_gastos; 
+    }
     public void setCantidad(int incremento) {
         this.cantidad = cantidad + incremento;
     }
@@ -79,14 +84,18 @@ public class Motocicleta {
     public void setPrecio(int precio) {
         this.precio = precio;
     }
+
+    public int getOtros_gastos() {
+        return otros_gastos;
+    }
     
     public String toStringMiembro(){
         return "    " + getCantidad() + " " + getNombre() + ", de " + getCilindrada() + "CC, coste de compra de "
-                    + getPrecio() + " y matricula " + getMatricula();
+                    + getPrecio() + " + otros gastos = "+getOtros_gastos() + " y matricula " + getMatricula() ;
     }
     
     public String toString(){
-        return "    " + getCantidad() + " " + getNombre() + ", de " + getCilindrada() + "CC, coste de compra de "
-                    + getPrecio();
+        return "    " + getCantidad() + " " +getNombre() + ", de " + getCilindrada() + "CC, coste de compra de "
+                    + getPrecio()+ ", " + " otros gastos = "+ getOtros_gastos();
     }
 }

@@ -27,6 +27,7 @@ public class Miembro {
         this.nombre = nombre;
         this.importe_motos = 0;
         this.n_motos = 0;
+        
     }
     public void actualizarImporte()
     {

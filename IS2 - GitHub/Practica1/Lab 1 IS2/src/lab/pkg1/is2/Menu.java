@@ -27,23 +27,21 @@ public class Menu {
     private int cantidad_socios = 0;
     private int cantidad_motos = 0;
     private ArrayList<Miembro> miembros;
-    private ArrayList<Motocicleta> motocicletas;
     private ArrayList<Cesion> cesiones;
 
     public Menu() throws IOException {
         this.miembros = new ArrayList<>();
-        this.motocicletas = new ArrayList<>();
         this.cesiones = new ArrayList<>();
-        
+
         int menu, max_compra;
         String nombre;
 
         System.out.println("Introduce importe máximo de compra de cada miembro: ");
         max_compra = leerInt();
         this.maxcompra = max_compra;
-        
+
         objetosPrueba();
-        
+
         do {
             System.out.println("\nMENU: \n1. Registrar un nuevo miembro");
             System.out.println("2. Registrar una nueva motocicleta");
@@ -51,7 +49,8 @@ public class Menu {
             System.out.println("4. Listar en pantalla los miembros con motos en posesión");
             System.out.println("5. Listar todas las motos");
             System.out.println("6. Mostrar las cesiones realizadas");
-            System.out.println("7. Salir del programa");
+            System.out.println("7. Modificar otros gastos de moto");
+            System.out.println("8. Salir del programa");
 
             menu = leerInt();
 
@@ -76,6 +75,9 @@ public class Menu {
                     mostrarCesiones();
                     break;
                 case 7:
+                    modificarOtrosGastos();
+                    break;
+                case 8:
                     System.out.println("Introduce el nombre del fichero: ");
                     nombre = leerString();
                     nombre = nombre + ".txt";
@@ -85,7 +87,7 @@ public class Menu {
                     break;
             }
             limpiarConsola();
-        } while (menu != 7);
+        } while (menu != 8);
     }
 
     public void registrarMiembro() {
@@ -122,8 +124,7 @@ public class Menu {
         if (miembros.size() > 0) {
 
             Motocicleta motocicleta, motocicleta_aux;
-            int precio;
-            int i;
+            int precio, otros_gastos, i;
 
             motocicleta_aux = solicitarMotocicleta();
             do {
@@ -135,11 +136,13 @@ public class Menu {
                 }
             } while (precio == 0);
 
-            motocicleta = new Motocicleta(sig_id_moto + cantidad_motos, motocicleta_aux.getMatricula(), motocicleta_aux.getNombre(), motocicleta_aux.getCilindrada(), precio);
+            System.out.println("Introduce el importe de otros gastos: ");
+            otros_gastos = leerInt();
+
+            motocicleta = new Motocicleta(sig_id_moto + cantidad_motos, motocicleta_aux.getMatricula(), motocicleta_aux.getNombre(), motocicleta_aux.getCilindrada(), precio, otros_gastos);
 
             i = buscarMiembroParaMotocicleta(motocicleta);
             if (i != error_maxcompra) {
-                motocicletas.add(motocicleta);
                 cantidad_motos++;
                 miembros.get(i).addMotocicletas(motocicleta);
                 miembros.get(i).setN_motos(incremento_num_motos);
@@ -158,7 +161,7 @@ public class Menu {
     public String leerString() {
         String s;
         Scanner sc = new Scanner(System.in);
-        s = sc.next();
+        s = sc.nextLine();
         return s;
     }
 
@@ -206,20 +209,16 @@ public class Menu {
     }
 
     private void mostrarMotos() {
-        ArrayList<Motocicleta> aux = new ArrayList<Motocicleta>();
-
-        aux = motocicletas;
+        
+        ArrayList<Motocicleta> aux = new ArrayList<>();
+        
+        for (int i = 0; i < miembros.size(); i++) {
+            for (int j = 0; j < miembros.get(i).getMotocicletas().size(); j++) {
+                aux.add(miembros.get(i).getMotocicletas().get(j));
+            }
+        }
 
         if (aux.size() > 0) {
-            for (int i = 0; i < aux.size(); i++) {
-                for (int j = 1; j < aux.size(); j++) {
-
-                    if (aux.get(i).getNombre().equals(aux.get(j).getNombre()) && aux.get(i).getCilindrada() == aux.get(j).getCilindrada() && aux.get(i).getPrecio() == aux.get(j).getPrecio()) {
-                        aux.get(i).setCantidad(incremento_num_motos);
-                        aux.remove(j);
-                    }
-                }
-            }
             System.out.println("Motocicletas: \n");
 
             for (int i = 0; i < aux.size(); i++) {
@@ -441,17 +440,16 @@ public class Menu {
         String[] matricula = {"1111AAA", "1111AAB", "1111AAC", "1111AAD", "1111AAE", "1111AAF"};
         int[] cilindrada = {125, 125, 70, 200, 75, 49};
         int[] precio = {2500, 2500, 2300, 3800, 1200, 4000};
+        int[] otros_gastos = {100, 120, 200, 100, 80, 30};
 
         for (int i = 0; i < matricula.length; i++) {
-
-            motocicleta = new Motocicleta(sig_id_moto + i, matricula[i], nombres_moto[i], cilindrada[i], precio[i]);
+            motocicleta = new Motocicleta(sig_id_moto + i, matricula[i], nombres_moto[i], cilindrada[i], precio[i], otros_gastos[i]);
             miembro = new Miembro(sig_id_socio + i, nombres[i]);
             miembros.add(miembro);
             if (motocicleta.getPrecio() <= maxcompra) {
                 miembro.addMotocicletas(motocicleta);
                 miembro.setN_motos(incremento_num_motos);
                 miembro.setImporte_motos(motocicleta.getPrecio());
-                motocicletas.add(motocicleta);
             }
         }
     }
@@ -495,5 +493,45 @@ public class Menu {
                 e2.printStackTrace();
             }
         }
+
+    }
+
+    public void modificarOtrosGastos() {
+        int i, j, miembro = 0, motocicleta = 0, otros_gastos = 0;
+        boolean matricula_valida = false, nombre_encontrado = false, motocicleta_encontrada = false;
+        String matricula;
+        mostrarMiembros();
+
+        do {
+            System.out.println("Introduce la matricula: ");
+            matricula = leerString();
+            matricula_valida = compruebaMatricula(matricula);
+            for (i = 0; i < miembros.size(); i++) {
+                for (j = 0; j < miembros.get(i).getMotocicletas().size(); j++) {
+                    if (miembros.get(i).getMotocicletas().get(j).getMatricula().equals(matricula)) {
+                        motocicleta_encontrada = true;
+                        miembro = i;
+                        motocicleta = j;
+                    }
+                }
+            }
+
+        } while (motocicleta_encontrada == false || false == matricula_valida);
+
+        do {
+            try {
+                System.out.println("Introduce el importe de otros gastos: ");
+                otros_gastos = leerInt();
+                Integer.parseInt("" + otros_gastos);
+                if (otros_gastos < 0) {
+                    System.out.println("No se admiten valores negativos");
+                } else {
+                    miembros.get(miembro).getMotocicletas().get(motocicleta).addOtrosGastos(otros_gastos);
+                }
+            } catch (Exception e) {
+                System.out.println("Se esperaba un numero entero.");
+            }
+        } while (otros_gastos < 0);
+
     }
 }
